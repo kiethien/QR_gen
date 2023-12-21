@@ -8,7 +8,8 @@
     <h1>Link QR code</h1>
     <form action="/qr_link" method="POST">
         <input type="text" name="link" id="link" placeholder="Enter your link">
-        <button type="submit" name="generate" value="Generate QR code">Generate QR code</button>
+        <img src="<%= qrCodeDataUrl %>" alt="QR Code">
+        
     </form>
 </body>
 </html>

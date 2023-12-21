@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 5000;
 const path = require('path');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
@@ -10,10 +10,15 @@ const { send } = require('process');
 const userdb = 'localhost:27017';
 const database = 'QR_gen';
 const passdb = '';
-const dburl = `mongodb://${userdb}/${database}`;
+const dburl = `mongodb+srv://khoa2062003:ProjectQreactive@cluster0.vcbiwum.mongodb.net/user?retryWrites=true&w=majority`;
 const url = require('url');
 const jimp = require('jimp');
 const multer = require('multer');
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+
+app.use(bodyParser.json());
+app.use(cors());
 const opt = {
     errorCorrectionLevel: 'H',
     type: 'image/png',
@@ -77,30 +82,130 @@ app.get('/', (req,res)=>{
 }
 );
 
-// Login route
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+//register
+app.get('/register', (req,res)=>{
+    res.render('register');
+}
+);
 
+app.post('/register', async (req,res)=>{
     try {
-        // if the account exists in the database then warn the user
-        if (await Account.exists({ username })) {
-            return res.status(400).json({ message: 'Account already exists' });
+        const { username, password } = req.body;
+
+        // Save the form data to the MongoDB database
+        const account = new Account({
+            username,
+            password: await bcrypt.hash(password, 10)
+        });
+
+        //check if username is already in database
+        const user=await Account.findOne({username:username});
+        if(user){
+            res.status(400).send('Username already exists');
         }
-        else {
-        currentAccount = username;}
-        // Create a new document using the Mongoose model
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        else{
+            await account.save();
+            res.redirect('/login');
+            res.send('User created successfully');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
+}
+);
 
-    res.redirect('/qr_generate');
-});
+//getUser
+app.get('/getUser', async (req,res)=>{
+    try {
+        const account = await Account.find();
+        res.json(account);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+}
+);
 
+//createuser
+app.post('/createUser', async (req,res)=>{
+    try {
+        const { username, password } = req.body;
+
+        // Save the form data to the MongoDB database
+        const account = new Account({
+            username,
+            password: await bcrypt.hash(password, 10)
+        });
+
+        await account.save();
+        res.send('User created successfully');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+}
+);
+
+
+//login
+app.get('/login', (req,res)=>{
+    res.render('login');
+}
+);
+
+app.post('/login', async (req,res)=>{
+    try {
+        const { username, password, email } = req.body;
+
+        // Save the form data to the MongoDB database
+        const account = new Account({
+            username,
+            email,
+            password: await bcrypt.hash(password, 10)
+        });
+
+        
+        //check if username is already in database
+        const user=await Account.findOne({username:username});
+        if(!user){
+            res.status(400).send('Username does not exist');
+        }
+        else{
+            //check if password is correct
+            if(await bcrypt.compare(password, user.password)){
+                currentAccount = user.username;
+                res.redirect('/qr_generate');
+            }
+            else{
+                res.send('Wrong password');
+            }
+        }
+        
+        //check if email is already in database
+        const mail=await Account.findOne({email:email});
+        if(mail){
+            res.status(400).send('Email already exists');
+        }
+        else{
+            await account.save();
+            res.redirect('/login');
+            res.send('User created successfully');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+}
+);
+
+
+//qr generate route
 app.get('/qr_generate', (req,res)=>{
     res.render('qr_generate');
 }
 );
+
 
 
 // Assuming personalQR is your Mongoose model
@@ -136,7 +241,7 @@ app.post('/personal_qr_code', async (req, res) => {
         });
 
         await personalQRData.save();
-
+        
         // Redirect to the scan page with the ID of the saved document
         res.redirect(`/scan/${personalQRData._id}`);
     } catch (err) {
@@ -158,13 +263,15 @@ app.get('/scan/:id', async (req, res) => {
         }
 
         // Construct the URL for the profile using the provided ID
-        const profileUrl = `http://localhost:3000/profile/${req.params.id}`;
+        const profileUrl = `http://localhost:5000/profile/${req.params.id}`;
 
         // Generate the QR code data for the profile URL
         const qrCodeDataUrl = await qr.toDataURL(profileUrl);
 
-        // Render the scan page with the QR code data and document ID
-        res.render('scan', { qrCodeDataUrl, id: req.params.id });
+        
+       
+        // send json data to client
+        res.json({ qrImageUrl: qrCodeDataUrl });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -214,11 +321,18 @@ app.post('/qr_link', async (req,res)=>{
 
         await linkQRData.save();
 
-        // Redirect to the scan page with the ID of the saved document
-        res.redirect(`/scan_link/${linkQRData._id}`);
+        // generate QR code for link
+        const qrCodeDataUrl = await qr.toDataURL(link);
+
+        // Send the QR code image URL to the client
+        res.json({ qrImageUrl: qrCodeDataUrl });
+        // Later in the code, mistakenly trying to send another response
+    // This will result in "Cannot set headers after they are sent to the client" error
+        
     } catch (err) {
         console.error(err);
-        res.status(500).send('Internal Server Error');
+        res.status(500).json({ error: 'Internal Server Error' });
+
     }
 }
 );
@@ -306,8 +420,11 @@ app.post('/qr_text', async (req,res)=>{
 
         await textQRData.save();
 
-        // Redirect to the scan page with the ID of the saved document
-        res.redirect(`/scan_text/${textQRData._id}`);
+        // generate QR code for link
+        const qrCodeDataUrl = await qr.toDataURL(text);
+
+        //send json data to client
+        res.json({ qrImageUrl: qrCodeDataUrl });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
