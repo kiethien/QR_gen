@@ -90,28 +90,42 @@ app.get('/register', (req,res)=>{
 
 app.post('/register', async (req,res)=>{
     try {
-        const { username, password } = req.body;
+        const { username, password, password2, email } = req.body;
 
         // Save the form data to the MongoDB database
         const account = new Account({
             username,
+            email,
             password: await bcrypt.hash(password, 10)
         });
-
-        //check if username is already in database
-        const user=await Account.findOne({username:username});
-        if(user){
-            res.status(400).send('Username already exists');
-        }
-        else{
-            await account.save();
-            res.redirect('/login');
-            res.send('User created successfully');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
+        
+    //check if username is already in database
+    const user=await Account.findOne({username:username});
+    if(user){
+        res.status(400).send('Username already exists');
     }
+    
+
+    //check if email is already in database
+    const mail=await Account.findOne({email:email});
+    if(mail){
+        res.status(400).send('Email already exists');
+    }
+   
+    
+    //check if password is the same
+    if(password!=password2){
+        res.status(400).send('Password is not the same');
+    }
+    
+    await account.save();
+    res.redirect('/login');
+    
+    
+} catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+}
 }
 );
 
@@ -156,12 +170,11 @@ app.get('/login', (req,res)=>{
 
 app.post('/login', async (req,res)=>{
     try {
-        const { username, password, email } = req.body;
+        const { username, password } = req.body;
 
         // Save the form data to the MongoDB database
         const account = new Account({
             username,
-            email,
             password: await bcrypt.hash(password, 10)
         });
 
@@ -182,16 +195,6 @@ app.post('/login', async (req,res)=>{
             }
         }
         
-        //check if email is already in database
-        const mail=await Account.findOne({email:email});
-        if(mail){
-            res.status(400).send('Email already exists');
-        }
-        else{
-            await account.save();
-            res.redirect('/login');
-            res.send('User created successfully');
-        }
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');

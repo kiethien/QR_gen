@@ -35,6 +35,18 @@ const LoginPage = () => {
           variant='btn_dark_green'
         />
       </div>
+
+      <div  className="border-2" onClick={
+        ()=>router.push("/login")
+        
+       }>
+        <Button
+          type='button'
+          title='Login'
+          icon='/user.svg'
+          variant='btn_dark_green'
+        />
+      </div>
     </div>
   )
 }

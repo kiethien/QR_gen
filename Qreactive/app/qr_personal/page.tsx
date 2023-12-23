@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 
 //import styles
-import "./styles.css";
+import styles from "./styles.module.css";
 const QRPersonalGenerator = () => {
     const [Name, setName] = useState('');
     const [Email, setEmail] = useState('');
@@ -44,113 +44,113 @@ const QRPersonalGenerator = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className='header'>
+      <div className='styles.header'>
         <h1>QR Personal Generator</h1>
       </div>
 
-      <div className='container'>
+      <div className='styles.container'>
         
-        <div className="input-group">
+        <div className="styles.input-group">
           <input
             type="text"
-            className="input"
+            className="styles.input"
             id="Name"
             value={Name}
             onChange={(e) => setName(e.target.value)}
             required
           />
-          <label htmlFor="Name" className="user-label">
+          <label htmlFor="Name" className="styles.user-label">
             Name
           </label>
         </div>
       
-        <div className="input-group">
+        <div className="styles.input-group">
           <input
             type="text"
-            className="input"
+            className="styles.input"
             id="Email"
             value={Email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <label htmlFor="Email" className="user-label">
+          <label htmlFor="Email" className="styles.user-label">
             Email
           </label>
         </div>
 
         
-        <div className="input-group">
+        <div className="styles.input-group">
           <input
             type="text"
-            className="input"
+            className="styles.input"
             id="Phone"
             value={Phone}
             onChange={(e) => setPhone(e.target.value)}
             required
           />
-          <label htmlFor="Phone" className="user-label">
+          <label htmlFor="Phone" className="styles.user-label">
             Phone
           </label>
         </div>
 
-        <div className="input-group">
+        <div className="styles.input-group">
           <input
             type="text"
-            className="input"
+            className="styles.input"
             id="Address"
             value={Address}
             onChange={(e) => setAddress(e.target.value)}
             required
           />
-          <label htmlFor="Address" className="user-label">
+          <label htmlFor="Address" className="styles.user-label">
             Address
           </label>
         </div>
 
-        <div className="input-group">
+        <div className="styles.input-group">
           <input
             type="text"
-            className="input"
+            className="styles.input"
             id="Website"
             value={Website}
             onChange={(e) => setWebsite(e.target.value)}
             required
           />
-          <label htmlFor="Website" className="user-label">
+          <label htmlFor="Website" className="styles.user-label">
             Website
           </label>
         </div>
 
-        <div className="input-group">
+        <div className="styles.input-group">
           <input
             type="text"
-            className="input"
+            className="styles.input"
             id="Position"
             value={Position}
             onChange={(e) => setPosition(e.target.value)}
             required
           />
-          <label htmlFor="Position" className="user-label">
+          <label htmlFor="Position" className="styles.user-label">
             Position
           </label>
         </div>
 
-        <div className="input-group">
+        <div className="styles.input-group">
           <input
             type="text"
-            className="input"
+            className="styles.input"
             id="Company"
             value={Company}
             onChange={(e) => setCompany(e.target.value)}
             required
           />
-          <label htmlFor="Company" className="user-label">
+          <label htmlFor="Company" className="styles.user-label">
             Company
           </label>
         </div>
       </div>
-      <div className='button'>
-        <button className='button1' onClick={generateQr}>Generate QR</button>
+      <div className='styles.button'>
+        <button className='styles.button1' onClick={generateQr}>Generate QR</button>
       </div>
         {qrImageUrl && <img src={qrImageUrl} alt="Generated QR Code" />}
     </>
