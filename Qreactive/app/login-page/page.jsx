@@ -4,6 +4,7 @@ import React from 'react'
 import  { useSession, signIn } from "next-auth/react"
 import {useRouter} from "next/navigation"
 
+
 const LoginPage = () => {
   const { data, status} = useSession();
 
@@ -14,7 +15,7 @@ const LoginPage = () => {
   }
 
   if (status === "authenticated"){
-    return <div className=''>Loading...</div>;
+    return <div className=''>Logined...</div>;
   }
   return (
     <div className='container border-2 flexCenter flex-col px-16'>

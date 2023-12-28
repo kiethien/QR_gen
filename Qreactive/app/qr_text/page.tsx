@@ -3,9 +3,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import axios from 'axios';
-
-//import styles
-import "./styles.css";
+import styles from "./styles.module.css";
 const QRLinkGenerator = () => {
   const [qrText, setQrText] = useState('');
   const [qrImageUrl, setQrImageUrl] = useState('');
@@ -31,27 +29,27 @@ const QRLinkGenerator = () => {
             <meta name="description" content="Generate QR code for a text" />
             <link rel="icon" href="/favicon.ico" />
         </Head>
-        <div className='header'>
+        <div className={styles.header}>
             <h1>QR Text Generator</h1>
         </div>
     
-        <div className='container'>
-          <div className="input-group">
+        <div className={styles.container}>
+          <div className={styles.input_group}>
             <input
               type="text"
-              className="input"
+              className={styles.input}
               id="Text"
               value={qrText}
               onChange={(e) => setQrText(e.target.value)}
               required
             />
-            <label htmlFor="Text" className="user-label">
+            <label htmlFor="Text" className={styles.user_label}>
               Text
             </label>
         </div>
         
-        <div className='button'>
-            <button className='button1' onClick={generateQr}>Generate QR</button>
+        <div className={styles.button}>
+            <button className={styles.button1} onClick={generateQr}>Generate QR</button>
             <br />
         </div>
             <div>Text: {qrText}</div>
