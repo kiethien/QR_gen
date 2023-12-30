@@ -13,7 +13,7 @@ const QRLinkGenerator = () => {
   const generateQr = async () => {
     try {
       // Send the link to the backend for QR code generation
-      const response = await axios.post('http://localhost:5000/qr_link', {
+      const response = await axios.post('http://localhost:5000/link/generate', {
         link: qrLink,
       });
 

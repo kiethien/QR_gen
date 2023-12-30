@@ -13,45 +13,31 @@ const login = (req, res) => {
 
 const authenticateUser = async (req, res, next) => {
     try {
-        // Get the tokenID from the params
-        const tokenID = req.params.id;
-        console.log(tokenID);
-        // Get the session from the database
-        const session = await Session.findOne({ _id: tokenID });
-        console.log("session:"+session);
-        // Get the JWT token from the session
-        const token = session.jwtToken;
-        console.log(token);
-        console.log(session);
-        console.log(tokenID);
-
-
-        
-
-        // If the token is null or undefined, return an unauthorized error
+        // Get the token from the cookie    
+        const token = req.cookies.token;
         if (!token) {
-            req.currentAccount = null;}
-        else{
+            return res.status(401).send('Access Denied');
+        }
+
         // Verify the token
-        const decoded = await jwt.verify(token, process.env.TOKEN_SECRET);
-        // Get the user details from the decoded token
-        const id = decoded.id;
-        const username = decoded.username;
-        const email = decoded.email;
+        const verified = await jwt.verify(token, process.env.TOKEN_SECRET);
+        if (!verified) {
+            return res.status(401).send('Access Denied');
+        }
 
-        // Set the user details to the request object
-        req.currentAccount = {
-            id,
-            username,
-            email,
-        };
+        // Check if the session is valid
+         const session = await Session.findOne({ jwtToken: token });
+        if (!session || session.expires < Date.now()) {
+            return res.status(401).send('Access Denied');
         }
-    }catch (err) {
-            console.error(err);
-            res.status(500).send('Internal Server Error');
-        }
+
+        // Continue with the next middleware
+        next();
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
     }
-
+};
 
 
 
@@ -83,12 +69,12 @@ const performLogin = async (req, res) => {
                 expires: new Date(Date.now() + 3600000), // 1 hour expiration
                 jwtToken: token, // Store the JWT token
             });
-
+            //delete old session
+            await Session.deleteMany({});
             await session.save();
 
             console.log(session._id);
-
-            // Redirect to /qr_generate
+            //Redirect to /qr_generate
             res.redirect(`/qr/qr_generate/${session._id}`);
         } else {
             return res.send('Wrong password');

@@ -8,66 +8,72 @@ const jwt = require('jsonwebtoken');
 const {authenticateUser} = require('../controllers/authenticationController');
 // Define personal QR controller methods
 const showPersonalQRGeneration = (req, res) => {
-    const tokenID = req.params.id;
-    res.render('personal_qr_code', { id: tokenID });
+    
+    res.render('personal_qr_code');
 
 };
 
 const generatePersonalQR = async (req, res) => {
     try {
         // Access the token from the session or Session schema
-        const tokenID = req.params.id;
-        const session = await Session.findOne({ _id: tokenID });
+        const session = await Session.findOne({ sessionToken: 'some-session-token' });
         const jwtToken = session.jwtToken;
-        console.log(session);
-
-        await authenticateUser(req, res);
-        const currentAccount = req.currentAccount.id;
-
-
         
+        if (!jwtToken) {
+            return res.status(401).send('Access Denied');
+        }
 
-        console.log(currentAccount);
-        
-        if (currentAccount){
-        const { name, email, phone, address, website, company, position } = req.body;
-        
+        try {
+            // Verify the token
+            const verified = await jwt.verify(jwtToken, process.env.TOKEN_SECRET);
             
-        
-        // Save the form data to the MongoDB database
-        const personalQRData = new personalQR({
-            name,
-            email,
-            phone,
-            address,
-            website,
-            company,
-            position,
-            account: currentAccount,
-        });
-
-        
-        const profileUrl = `http://localhost:5000/personalQR/profile/${personalQRData._id}`;
-        const qrCodeDataUrl = await qr.toDataURL(profileUrl);
-        personalQRData.QRcode = qrCodeDataUrl;
-        await personalQRData.save();
-        //send the QR code image URL to the client
-        res.json({ qrImageUrl: qrCodeDataUrl });
-
-        // Redirect to the scan page with the ID of the saved document
-        // res.redirect(`/personalQR/scan/${personalQRData._id}`);
-        // res.render('personal_qr_code', { qrCodeDataUrl: qrCodeDataUrl});
+            decoded = jwt.decode(jwtToken, { complete: true });
+            const currentAccount = decoded.payload.id;
     
-        }
-        else{
-            res.status(401).send('Unauthorized');
-        }
+            if (currentAccount) {
+                const { name, email, phone, address, website, company, position } = req.body;
 
+                // Save the form data to the MongoDB database
+                const personalQRData = new personalQR({
+                    name,
+                    email,
+                    phone,
+                    address,
+                    website,
+                    company,
+                    position,
+                    account: currentAccount,
+                });
+
+                const profileUrl = `http://localhost:5000/personalQR/profile/${personalQRData._id}`;
+                const qrCodeDataUrl = await qr.toDataURL(profileUrl);
+                personalQRData.QRcode = qrCodeDataUrl;
+                await personalQRData.save();
+                // Send the QR code image URL to the client
+                res.json({ qrImageUrl: qrCodeDataUrl });
+
+                // Redirect to the scan page with the ID of the saved document
+                // res.redirect(`/personalQR/scan/${personalQRData._id}`);
+                // res.render('personal_qr_code', { qrCodeDataUrl: qrCodeDataUrl });
+
+            } else {
+                res.status(401).send('Unauthorized');
+            }
+        } catch (err) {
+            // Handle JWT expiration error
+            if (err.name === 'TokenExpiredError') {
+                return res.status(401).send('Access Denied: Token Expired');
+            }
+
+            console.error(err);
+            res.status(500).send('Internal Server Error');
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 };
+
 
 const scanPersonalQR = async (req, res) => {
     try {
@@ -96,7 +102,7 @@ const showProfile = async (req, res) => {
     try {
         // Retrieve the saved data from the database using the provided ID
         const personalQRData = await personalQR.findById(req.params.id);
-
+        
         if (!personalQRData) {
             return res.status(404).send('QR Data not found');
         }
@@ -110,7 +116,7 @@ const showProfile = async (req, res) => {
         company: ${personalQRData.company}
         position: ${personalQRData.position}`;
 
-        res.render('profile', { data });
+        res.render('profile', { name: personalQRData.name, email: personalQRData.email, phone: personalQRData.phone, address: personalQRData.address, website: personalQRData.website, company: personalQRData.company, position: personalQRData.position });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');

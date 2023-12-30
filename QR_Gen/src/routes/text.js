@@ -6,5 +6,7 @@ const textController = require('../controllers/textController');
 router.get('/generate', textController.showTextQRGeneration);
 router.post('/generate', textController.generateTextQR);
 
+router.get('/edit/:id', textController.editText);
+router.post('/edit/:id', textController.saveTextChanges);
 
 module.exports = router;

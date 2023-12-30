@@ -5,7 +5,9 @@ const profileController = require('../controllers/profileController');
 
 
 router.get('/list', qrListController.listQRCodes);
-router.get('/edit/:id/:tokenID', profileController.editProfile);
-router.post('/edit/:id/:tokenID', profileController.saveProfileChanges);
+router.get('/edit/:id', profileController.editProfile);
+router.post('/edit/:id', profileController.saveProfileChanges);
+router.get('/back/:id', profileController.backToList);
+router.get('/delete/:id', profileController.deleteQRCode);
 
 module.exports = router;

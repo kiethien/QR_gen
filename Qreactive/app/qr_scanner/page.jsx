@@ -11,6 +11,7 @@ import "./styles.css";
 
 // Main QRScanner component
 function QRScanner() {
+  
   // Router instance
   const router = useRouter();
 
@@ -52,6 +53,12 @@ function QRScanner() {
         <button className="button1" onClick={() => navigateToQRType("Personal")}>
           Personal
         </button>
+
+        {/* Button to navigate to QR List page */}
+        <button className="button1" onClick={() => navigateToQRType("List")}>
+          List
+        </button>
+        
       </div>
 
       {/* Display the selected QR code type */}

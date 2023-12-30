@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const textQRSchema = new mongoose.Schema({
     content: String,
     account: String,
+    QRcode: String,
     generatedAt:{ type: Date, default: Date.now },
     type: { type: String, default: "text" }
 });

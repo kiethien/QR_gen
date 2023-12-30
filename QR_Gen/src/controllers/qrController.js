@@ -4,13 +4,6 @@ const Session = require('../models/Session');
 const showQRGeneration = async(req, res) => {
     const tokenID = req.params.id;
     res.render('qr_generate', { id: tokenID });
-
-    // Access the token from the session or Session schema
-    
-    const session = await Session.findOne({ _id: tokenID });
-    const jwtToken = session.jwtToken;
-    console.log(tokenID);
-    console.log("check");
 };
 
 // Controller method to handle form submission and generate QR code

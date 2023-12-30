@@ -32,9 +32,14 @@ const SignIn = () => {
     } else {
       // Clear any previous error
       setError('');
-      
-      // Redirect to qr_generate page upon successful login
-      router.push('/qr_scanner');
+
+      if (res.data.error) {
+        setError(res.data.error);
+      } else {
+        // Redirect to qr_generate page upon successful login
+        router.push('/qr_scanner');
+      }
+    
     }
   } catch (err) {
     console.error(err);

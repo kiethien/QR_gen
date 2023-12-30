@@ -1,6 +1,8 @@
 const qr = require('qrcode');
 const mongoose = require('mongoose');
 const LinkQR = require('../models/linkQR');
+const Session = require('../models/Session');
+const jwt = require('jsonwebtoken');
 const {authenticateUser} = require('../controllers/authenticationController');
 // Define Link QR controller methods
 const showLinkQRGeneration = (req, res) => {
@@ -8,9 +10,21 @@ const showLinkQRGeneration = (req, res) => {
 };
 const generateLinkQR = async (req, res) => {
     try {
+        // Access the token from the session or Session schema
+        const session = await Session.findOne({ sessionToken: 'some-session-token' });
+        const jwtToken = session.jwtToken;
+        console.log(jwtToken);
+        if (!jwtToken) {
+            return res.status(401).send('Access Denied');
+        }
+        try{
+            // Verify the token
+            const verified = await jwt.verify(jwtToken, process.env.TOKEN_SECRET);
+            decoded = jwt.decode(jwtToken, { complete: true });
+            const currentAccount = decoded.payload.id;
+            if (currentAccount) {
         const { link } = req.body;
-        await authenticateUser(req, res);
-        const currentAccount = req.currentAccount.id;
+        
         // Save the form data to the MongoDB database
         const linkQRData = new LinkQR({
             content: link,
@@ -25,7 +39,15 @@ const generateLinkQR = async (req, res) => {
         await linkQRData.save();
         // Send the QR code image URL to the client
         res.json({ qrImageUrl: qrCodeDataUrl });
-        
+    }
+    else {
+        res.status(401).send('Unauthorized');
+    }
+}
+catch(err){
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+}
         
     } catch (err) {
         console.error(err);
@@ -55,8 +77,8 @@ const editLink = async (req, res) => {
         if (!linkQRData) {
             return res.status(404).send('Link QR Data not found');
         }
-
-        res.render('edit_link', { qrCode:linkQRData });
+        res.json(linkQRData);
+        // res.render('edit_link', { qrCode:linkQRData });
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');

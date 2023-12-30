@@ -17,11 +17,11 @@
                     
                     <!-- Check the type of QR code -->
                     <% if (qrCode.type === 'personal') { %>
-                        <a href="<%= `/profile/edit/${qrCode._id}/${tokenID}` %>">Modify</a>
+                        <a href="<%= `/profile/edit/${qrCode._id}` %>">Modify</a>
                     <% } else if (qrCode.type==="text") { %>
-                        <a href="<%= `/text/edit/${qrCode._id}/${tokenID}` %>">Modify</a>
+                        <a href="<%= `/text/edit/${qrCode._id}` %>">Modify</a>
                     <% } else if (qrCode.type==="link") { %>
-                        <a href="<%= `/link/edit/${qrCode._id}/${tokenID}` %>">Modify</a>
+                        <a href="<%= `/link/edit/${qrCode._id}` %>">Modify</a>
                     <% } %>
                 </li>
             <% }); %>
