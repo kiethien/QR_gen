@@ -73,9 +73,12 @@ const performLogin = async (req, res) => {
             await Session.deleteMany({});
             await session.save();
 
-            console.log(session._id);
+            
             //Redirect to /qr_generate
-            res.redirect(`/qr/qr_generate/${session._id}`);
+            // res.redirect(`/qr/qr_generate/${session._id}`);
+            //send sessionID to client
+            res.send(session._id);
+            console.log(session._id);
         } else {
             return res.send('Wrong password');
         }
@@ -95,4 +98,5 @@ module.exports = {
     performLogin,
     logout,
     authenticateUser,
+    
 };

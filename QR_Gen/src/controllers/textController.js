@@ -39,6 +39,7 @@ const generateTextQR = async (req, res) => {
         textQRData.QRcode = qrCodeDataUrl;
         // res.render('qr_text', { qrCodeDataUrl: qrCodeDataUrl});
         // textQRData.QRcode = qrCodeDataUrl;
+        textQRData.Link = text;
         await textQRData.save();
         // Send the QR code image URL to the client
         res.json({ qrImageUrl: qrCodeDataUrl });

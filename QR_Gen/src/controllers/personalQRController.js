@@ -48,6 +48,7 @@ const generatePersonalQR = async (req, res) => {
                 const profileUrl = `http://localhost:5000/personalQR/profile/${personalQRData._id}`;
                 const qrCodeDataUrl = await qr.toDataURL(profileUrl);
                 personalQRData.QRcode = qrCodeDataUrl;
+                personalQRData.Link = profileUrl;
                 await personalQRData.save();
                 // Send the QR code image URL to the client
                 res.json({ qrImageUrl: qrCodeDataUrl });

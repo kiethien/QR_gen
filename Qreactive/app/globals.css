@@ -4,6 +4,29 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background:  black;
+  color: hsl(209, 61%, 16%);
+  
+  width: auto;
+  overflow-y: auto;
+  height: 100px;
+ 
+}
+
+main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Adjusted to space-between */
+  align-items: center;
+}
+
 * {
   margin: 0;
   padding: 0;

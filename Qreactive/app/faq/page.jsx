@@ -1,4 +1,4 @@
-import "./styles.css";
+import styles from "./styles.module.css"
 
 import Image from "next/image";
 import { QUESTIONS } from '@/constants'
@@ -8,7 +8,7 @@ function App() {
   return (
     <main>
       {/* Hero Section */}
-      <section className="hero">
+      <section className={styles.hero}>
         <div className="hero-content">
           <h1>Frequently Asked Questions About QREACTIVE</h1>
           <p>Below we have collected answers to questions that you may have</p>
@@ -21,12 +21,12 @@ function App() {
       </section>
 
       {/* Questions Section */}
-      <div className="container">
+      <div className={styles.container}>
         <h3>Question you may have when using our web</h3>
         <section>
           {QUESTIONS.map((QUESTIONS) => (
             <SingleQuestion key={QUESTIONS.id} {...QUESTIONS} />
-          ))}
+          ))} 
         </section>
       </div>
     </main>

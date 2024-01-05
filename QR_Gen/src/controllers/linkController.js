@@ -4,7 +4,7 @@ const LinkQR = require('../models/linkQR');
 const Session = require('../models/Session');
 const jwt = require('jsonwebtoken');
 const {authenticateUser} = require('../controllers/authenticationController');
-// Define Link QR controller methods
+// Define Link QR controller methodss
 const showLinkQRGeneration = (req, res) => {
     res.render('qr_link');
 };
@@ -17,7 +17,7 @@ const generateLinkQR = async (req, res) => {
         if (!jwtToken) {
             return res.status(401).send('Access Denied');
         }
-        try{
+        try{                                                        //author : Koha
             // Verify the token
             const verified = await jwt.verify(jwtToken, process.env.TOKEN_SECRET);
             decoded = jwt.decode(jwtToken, { complete: true });
@@ -36,6 +36,7 @@ const generateLinkQR = async (req, res) => {
         // Generate QR code for link
         const qrCodeDataUrl = await qr.toDataURL(link);
         linkQRData.QRcode = qrCodeDataUrl;
+        linkQRData.Link = link;
         await linkQRData.save();
         // Send the QR code image URL to the client
         res.json({ qrImageUrl: qrCodeDataUrl });

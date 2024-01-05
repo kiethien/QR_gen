@@ -11,6 +11,7 @@ const personalQRSchema = new mongoose.Schema({
     position: String,
     account: String,
     QRcode: String,
+    Link: String,
     generatedAt: { type: Date, default: Date.now },
     type: { type: String, default: "personal" },
 });

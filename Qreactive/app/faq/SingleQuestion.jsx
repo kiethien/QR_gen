@@ -2,15 +2,16 @@
 import React, { useState } from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import PropTypes from "prop-types";
+import styles from "./styles.module.css"
 
 const SingleQuestion = ({ title, info }) => {
   const [showInfo, setShowInfo] = useState(false);
 
   return (
-    <article className="question">
+    <article className={styles.question}>
       <header>
-        <h4>{title}</h4>
-        <button className="btn" onClick={() => setShowInfo(!showInfo)}>
+        <h4 className={styles.headingStyles.h4}>{title}</h4>
+        <button className={styles.btn} onClick={() => setShowInfo(!showInfo)}>
           {showInfo ? <AiOutlineMinus /> : <AiOutlinePlus />}
         </button>
       </header>

@@ -3,11 +3,69 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import MyQR from "./MyQRCodes.module.css";
 
-const QRList = () => {
+function MyQRCodesContent() {
+  // State to manage dropdown visibility
+  const [dropdown1Visible, setDropdown1Visible] = useState(false);
+  const [dropdown2Visible, setDropdown2Visible] = useState(false);
+  const [dropdown3Visible, setDropdown3Visible] = useState(false);
+  const [dropdown4Visible, setDropdown4Visible] = useState(false);
   const [qrCodes, setQRCodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  // Toggle dropdown function
+  const toggleDropdown = (dropdownId) => {
+    switch (dropdownId) {
+      case "1":
+        setDropdown1Visible(!dropdown1Visible);
+        break;
+      case "2":
+        setDropdown2Visible(!dropdown2Visible);
+        break;
+      case "3":
+        setDropdown3Visible(!dropdown3Visible);
+        break;
+      case "4":
+        setDropdown4Visible(!dropdown4Visible);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Close dropdowns on click outside
+  const handleClickOutside = (event) => {
+    const dropdowns = [
+      { id: "1", visible: dropdown1Visible, setVisible: setDropdown1Visible },
+      { id: "2", visible: dropdown2Visible, setVisible: setDropdown2Visible },
+      { id: "3", visible: dropdown3Visible, setVisible: setDropdown3Visible },
+      { id: "4", visible: dropdown4Visible, setVisible: setDropdown4Visible },
+    ];
+
+    // Check if the click target is inside any of the dropdowns
+    const isClickInsideDropdown = dropdowns.some(({ visible }) => visible);
+
+    if (!isClickInsideDropdown) {
+      // Close all dropdowns if the click is outside
+      dropdowns.forEach(({ visible, setVisible }) => {
+        if (visible) {
+          setVisible(false);
+        }
+      });
+    }
+  };
+
+  // Attach click event listener when the component mounts
+  React.useEffect(() => {
+    window.addEventListener("click", handleClickOutside);
+
+    // Cleanup event listener when the component unmounts
+    return () => {
+      window.removeEventListener("click", handleClickOutside);
+    };
+  }, [dropdown1Visible, dropdown2Visible, dropdown3Visible, dropdown4Visible]);
+
   useEffect(() => {
     const fetchQRCodes = async () => {
       try {
@@ -71,42 +129,191 @@ const QRList = () => {
     }
   }
 
-
-
-
-      
-
   return (
     <div>
-      <h1>QR List</h1>
-      {loading ? (
-        <p>Loading QR codes...</p>
-      ) : (
+      <div className={MyQR.container}>
+        <div className={MyQR.header}>
+          <h2>My QR Codes</h2>
+          <nav>
+            <ol>
+              <li>All QR codes /</li>
+            </ol>
+          </nav>
+        </div>
+        <div className={MyQR.buttonContainer}>
+          <a
+            href="/qr_scanner"
+            className={MyQR.createBtn}
+            id="create-new-qenerator-btn"
+            data-action="click->admin--qr-filters#createNewBtn"
+          >
+            <div>
+              <img src="/public/more.png" alt="add" />
+              <span>Create new QR</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      {/* New big container with three child divs */}
+      <div className={MyQR.bigContainer}>
+        <div className={MyQR.headDiv1}>
+          <button className={MyQR.selectAllBtn}>Select All</button>
+          <button className={MyQR.copyBtn} id={MyQR.copyButton}></button>
+          <button className={MyQR.deleteBtn} id={MyQR.deleteButton}></button>
+          <div className={MyQR.dropdown} id={MyQR.filterButton}>
+            <button
+              onClick={() => toggleDropdown("1")}
+              className={MyQR.dropbtn}
+            >
+              <img
+                src="/public/filter.png"
+                alt="from"
+                style={{ width: "24px", height: "24px" }}
+              />
+            </button>
+            <div
+              id={MyQR.dropdownContent1}
+              className={`${MyQR.dropdownContent} ${
+                dropdown1Visible ? MyQR.show : ""
+              }`}
+            >
+              <a href="#" onClick={() => toggleDropdown("1")}>
+                Link
+              </a>
+              <a href="#" onClick={() => toggleDropdown("1")}>
+                Vcard
+              </a>
+              <a href="#" onClick={() => toggleDropdown("1")}>
+                Text
+              </a>
+            </div>
+          </div>
+
+          <div className={MyQR.dropdown} id={MyQR.fromButton}>
+            <button
+              onClick={() => toggleDropdown("2")}
+              className={MyQR.dropbtn}
+            >
+              <img
+                src="/public/from.png"
+                alt="from"
+                style={{ width: "24px", height: "24px" }}
+              />
+            </button>
+            <div
+              id={MyQR.dropdownContent2}
+              className={`${MyQR.dropdownContent} ${
+                dropdown2Visible ? MyQR.show : ""
+              }`}
+            >
+              <a href="#" onClick={() => toggleDropdown("2")}>
+                New First
+              </a>
+              <a href="#" onClick={() => toggleDropdown("2")}>
+                Old First
+              </a>
+              <a href="#" onClick={() => toggleDropdown("2")}>
+                By Popularity
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className={MyQR.headDiv2}>
+          <input type="text" id={MyQR.searchBox} placeholder="Search..." />
+        </div>
+        <div className={MyQR.belowDiv}>
+
+
         <ul>
-          {qrCodes.map((code, index) => (
-            <li key={index}>
-              <p>Name: {code.name}</p>
-              <p>Type: {code.type}</p>
-              
-              <img src={code.QRcode} alt={code.name} />
-              <button onClick={() => {
-                if (code.type === "link" ){
-                  handleEditLink(code._id);
-                } else if (code.type === "personal"){
-                  handleEdit(code._id);
-                }
-                else if (code.type === "text"){
-                  handleEditText(code._id);
-                }
-                }}>Edit</button> 
-              <button onClick={() => handleDelete(code._id)}>Delete</button>
-            </li>
-          ))}
+
+
+          
+            {qrCodes.map((code, index) => (
+              <li key={index}>
+                <div className={MyQR.qrCodeContainer}>
+                  <div className={MyQR.checkboxContainer}>
+                      {/* Checkbox */}
+                      <input type="checkbox" id={MyQR.checkbox} />
+                      {/* Text next to the checkbox */}
+                      <label htmlFor={MyQR.checkbox} className={MyQR.checkboxLabel}>
+                        Include in Selection
+                      </label>
+                  </div>
+                  <img src={code.QRcode} alt={code.name} />
+                    <div className={MyQR.qrCodeInfo}>
+                      <p>Link: {code.Link}</p>
+                      <p>Type: {code.type}</p>
+                      <p>Created: {code.generatedAt}</p>
+                    </div>
+
+                      <div className={MyQR.buttonsContainer}>
+                        <div className={MyQR.dropdown}>
+                        <button
+                          onClick={() => toggleDropdown("3")}
+                          className={MyQR.dropbtn}
+                        >
+                          Dowload
+                        </button>
+                        <div
+                          className={`${MyQR.dropdownContent} ${
+                            dropdown3Visible ? MyQR.show : ""
+                          }`}
+                        >
+                          <a
+                            href="#"
+                            style={{ display: "flex", alignItems: "center" }}
+                            onClick={() => toggleDropdown("3")}
+                          >
+                            PNG
+                            <img
+                              src="/public/qrdowload.png"
+                              alt="Download SVG"
+                              style={{
+                                width: "24px",
+                                height: "24px",
+                                marginLeft: "30px",
+                              }}
+                            />
+                          </a>
+                          <a
+                            href="#"
+                            style={{ display: "flex", alignItems: "center" }}
+                            onClick={() => toggleDropdown("3")}
+                          >
+                            SVG
+                            <img
+                              src="/public/qrdowload.png"
+                              alt="Download SVG"
+                              style={{
+                                width: "24px",
+                                height: "24px",
+                                marginLeft: "30px",
+                              }}
+                            />
+                          </a>
+                        </div>
+                      </div>
+                  <button onClick={() => {
+                    if (code.type === "link" ){
+                      handleEditLink(code._id);
+                    } else if (code.type === "personal"){
+                      handleEdit(code._id);
+                    }
+                    else if (code.type === "text"){
+                      handleEditText(code._id);
+                    }
+                    }}>Edit</button> 
+                  <button onClick={() => handleDelete(code._id)}>Delete</button>
+                </div>
+              </div>
+              </li>
+            ))}
+
         </ul>
-      )}
+        </div>
+      </div>
     </div>
   );
-};
+}
 
-
-export default QRList;
+export default MyQRCodesContent;
