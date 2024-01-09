@@ -12,15 +12,14 @@ const generateTextQR = async (req, res) => {
     try {
         // Access the token from the session or Session schema
         var currentAccount;
-        const session = await Session.findOne({ sessionToken: 'some-session-token' });
+        const token = await Session.findOne({ sessionToken: 'some-session-token' });
         
-        if (!jwtToken) {
+        if (!token) {
             currentAccount = "none";
         }
         else {
-            // Verify the token
-            decoded = jwt.decode(jwtToken, { complete: true });
-            currentAccount = decoded.payload.id;
+        currentAccount = token.userId;
+        
         }
             
         const { text } = req.body;
