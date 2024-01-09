@@ -33,6 +33,7 @@ const linkRoutes = require('./link');
 const qrListRoutes = require('./qrList');
 const textRoutes = require('./text');
 const profileRoutes = require('./profile');
+const personalDataRoutes = require('./personalDataQR');
 const mongoose = require('../db');
 // Use routes
 app.use('/', authenticationRoutes);
@@ -44,6 +45,8 @@ app.use('/link', linkRoutes);
 app.use('/qrList', qrListRoutes);
 app.use('/text', textRoutes);
 app.use('/profile', profileRoutes);
+app.use('/personalDataQR', personalDataRoutes);
+
 
 
 app.listen(port, () => {

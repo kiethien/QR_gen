@@ -2,6 +2,7 @@ const personalQR = require('../models/personalQR');
 const linkQR = require('../models/linkQR');
 const textQR = require('../models/textQR');
 const Session = require('../models/Session');
+const personalDataQR = require('../models/personalDataQR');
 const jwt = require('jsonwebtoken');
 
 const listQRCodes = async (req, res) => {
@@ -27,8 +28,9 @@ const listQRCodes = async (req, res) => {
         const personalQRCodes = await personalQR.find({ account: currentAccount });
         const linkQRCodes = await linkQR.find({ account: currentAccount });
         const textQRCodes = await textQR.find({ account: currentAccount });
+        const personalDataQRCodes = await personalDataQR.find({ account: currentAccount });
         // Combine all QR codes into a single array
-        const allQRCodes = [...personalQRCodes, ...linkQRCodes, ...textQRCodes];
+        const allQRCodes = [...personalQRCodes, ...linkQRCodes, ...textQRCodes, ...personalDataQRCodes];
         if (!allQRCodes) {
             return res.status(404).send('null');
         }

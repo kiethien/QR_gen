@@ -137,6 +137,17 @@ function MyQRCodesContent() {
     }
   }
 
+  const handleEditPersonalData = async (id) => {
+    try {
+      console.log(id);
+      //navigate to the edit page
+      router.push(`/personalData/${id}`); 
+    }
+    catch (error) {
+      console.error(`Error editing QR code with id ${id}:`, error);
+    }
+  }
+
   return (
     <div>
       <div className={MyQR.container}>
@@ -310,6 +321,9 @@ function MyQRCodesContent() {
                     }
                     else if (code.type === "text"){
                       handleEditText(code._id);
+                    }
+                    else if (code.type === "personalData"){
+                      handleEditPersonalData(code._id);
                     }
                     }}>Edit</button> 
                   <button onClick={() => handleDelete(code._id)}>Delete</button>

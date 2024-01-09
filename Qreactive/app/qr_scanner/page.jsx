@@ -25,7 +25,7 @@ function QRScanner() {
 
   // Function to navigate to a specific QR code type page
   const navigateToQRType = (type) => {
-    router.push(`${type.toLowerCase()}`);
+    router.push(`${type}`);
     handleTypeSelection(type);
   };
 
@@ -45,22 +45,27 @@ function QRScanner() {
       {/* Container for QR code type buttons */}
       <div className={styles.container}>
         {/* Button to navigate to QR Link page */}
-        <button className={styles.button1} onClick={() => navigateToQRType("qr_Link")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("qr_link")}>
           Link
         </button>
 
         {/* Button to navigate to QR Text page */}
-        <button className={styles.button1} onClick={() => navigateToQRType("qr_Text")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("qr_text")}>
           Text
         </button>
 
         {/* Button to navigate to QR Personal page */}
-        <button className={styles.button1} onClick={() => navigateToQRType("qr_Personal")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("qr_personal")}>
           Personal
         </button>
 
+        {/* Button to navigate to QR Personal Data */}
+        <button className={styles.button1} onClick={() => navigateToQRType("personalData")}>
+          Personal Data
+        </button>
+
         {/* Button to navigate to QR List page */}
-        <button className={styles.button1} onClick={() => navigateToQRType("user-page")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("qr_list")}>
           List
         </button>
 
