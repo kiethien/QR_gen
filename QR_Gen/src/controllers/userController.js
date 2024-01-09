@@ -1,18 +1,38 @@
 const Account = require('../models/account');
+const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const myProfile = require('../models/myProfile');
 
 // Define user controller methods
 const showRegistration = (req, res) => {
-    const token = req.session.token;
+    // const token = req.session.token;
     res.render('register');
 };
 
-const performRegistration = async (req, res) => {
-    const token = req.session.token;
+const checkEmail = async (req, res) => {
     try {
-        const { username, password, password2, email } = req.body;
+        const { email } = req.body;
+        //check already in the database
+        const mailAccount = await Account.findOne({ email: email });
+        const mailUser = await User.findOne({ email: email });
+        if (mailAccount || mailUser) {
+            return res.send('Email already exists');
+        }
+        else {
+            return res.send('success');
+        }
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const performRegistration = async (req, res) => {
+
+    try {
+        const { username, password, email } = req.body;
 
         // Save the form data to the MongoDB database
         const account = new Account({
@@ -21,21 +41,34 @@ const performRegistration = async (req, res) => {
             password: await bcrypt.hash(password, 10),
         });
 
+        // Save the user data to the MongoDB database
+        const user = new User({
+            name: username,
+            email: email,
+            emailVerified: null,
+            Image: null,
+        });
+
         // Check already in the database
-        const user = await Account.findOne({ username: username });
-        const mail = await Account.findOne({ email: email });
-        if (user) {
+        const userAccount = await Account.findOne({ username: username });
+        const userUser = await User.findOne({ name: username });
+        const mailAccount = await Account.findOne({ email: email });
+        const mailUser = await User.findOne({ email: email });
+        if (userAccount || userUser) {
             return res.send('Username already exists');
         }
-        else if (mail) {
+        else if (mailAccount || mailUser) {
             return res.send('Email already exists');
         }
-        else if (password !== password2) {
-            return res.send('Password does not match');
-        }
+        // else if (password !== password2) {
+        //     return res.send('Password does not match');
+        // }
         else{
         await account.save();
-        res.redirect('/');}
+        console.log("Account created successfully");
+        res.send ('success');
+        
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -89,4 +122,6 @@ catch(err){
 module.exports = {
     showRegistration,
     performRegistration,
+    SaveProfile,
+    checkEmail,
 };

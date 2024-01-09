@@ -11,18 +11,18 @@ const showTextQRGeneration = (req, res) => {
 const generateTextQR = async (req, res) => {
     try {
         // Access the token from the session or Session schema
+        var currentAccount;
         const session = await Session.findOne({ sessionToken: 'some-session-token' });
-        const jwtToken = session.jwtToken;
         
         if (!jwtToken) {
-            return res.status(401).send('Access Denied');
+            currentAccount = "none";
         }
-        try{
+        else {
             // Verify the token
-            const verified = await jwt.verify(jwtToken, process.env.TOKEN_SECRET);
             decoded = jwt.decode(jwtToken, { complete: true });
-            const currentAccount = decoded.payload.id;
-            if (currentAccount) {
+            currentAccount = decoded.payload.id;
+        }
+            
         const { text } = req.body;
 
         
@@ -43,18 +43,11 @@ const generateTextQR = async (req, res) => {
         await textQRData.save();
         // Send the QR code image URL to the client
         res.json({ qrImageUrl: qrCodeDataUrl });
-    }
-    else {
-        res.status(401).send('Unauthorized');
-    }
 }
 
 
-catch(err){
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-}
-    } catch (err) {
+
+     catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal Server Error' });
     }

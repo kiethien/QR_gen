@@ -32,12 +32,15 @@ const generateLinkQR = async (req, res) => {
         });
 
         
-
+        console.log(link);
         // Generate QR code for link
         const qrCodeDataUrl = await qr.toDataURL(link);
         linkQRData.QRcode = qrCodeDataUrl;
+        // res.render('qr_link', { qrCodeDataUrl: qrCodeDataUrl});
+        // linkQRData.QRcode = qrCodeDataUrl;
         linkQRData.Link = link;
         await linkQRData.save();
+
         // Send the QR code image URL to the client
         res.json({ qrImageUrl: qrCodeDataUrl });
     }

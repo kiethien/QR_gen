@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import MyQR from "./MyQRCodes.module.css";
+import MyQR from "@/app/user-page/MyQRCodes.module.css";
+import Image from 'next/image';
 
 function MyQRCodesContent() {
   // State to manage dropdown visibility
@@ -137,6 +138,8 @@ function MyQRCodesContent() {
     }
   }
 
+
+
   return (
     <div>
       <div className={MyQR.container}>
@@ -202,10 +205,11 @@ function MyQRCodesContent() {
               onClick={() => toggleDropdown("2")}
               className={MyQR.dropbtn}
             >
-              <img
-                src="from.png"
+              <Image
+                src="/from.png"
                 alt="from"
-                style={{ width: "24px", height: "24px" }}
+                width={24}
+                height={24}
               />
             </button>
             <div
@@ -247,7 +251,7 @@ function MyQRCodesContent() {
                         Include in Selection
                       </label>
                   </div>
-                  <img src={code.QRcode} alt={code.name} />
+                  <Image src={code.QRcode} alt={code.name} height={24} width={24}/>
                     <div className={MyQR.qrCodeInfo}>
                       <p>Link: {code.Link}</p>
                       <p>Type: {code.type}</p>
@@ -271,6 +275,7 @@ function MyQRCodesContent() {
                             <a
                               href="#"
                               style={{ display: 'flex', alignItems: 'center' }}
+                              // download png
                               onClick={(e) => e.preventDefault()} // Prevent default behavior of anchor tag
                             >
                             PNG

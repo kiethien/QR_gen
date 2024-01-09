@@ -5,6 +5,7 @@ const authenticationController = require('../controllers/authenticationControlle
 // Define authentication routes
 router.get('/', authenticationController.login);
 router.post('/login', authenticationController.performLogin);
+
 router.get('/logout', authenticationController.logout);
 
 module.exports = router;

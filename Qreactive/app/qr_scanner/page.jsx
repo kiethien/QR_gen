@@ -5,9 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-// Import styles
-import "./styles.css";
+import styles from "./styles.module.css";
+import axios from "axios";
 
 // Main QRScanner component
 function QRScanner() {
@@ -26,44 +25,55 @@ function QRScanner() {
 
   // Function to navigate to a specific QR code type page
   const navigateToQRType = (type) => {
-    router.push(`/qr_${type.toLowerCase()}`);
+    router.push(`${type.toLowerCase()}`);
     handleTypeSelection(type);
+  };
+
+  const logout = async() => {
+    await axios.get("http://localhost:5000/logout");
+    
+    router.push("/");
   };
 
   return (
     <main>
       {/* Container for the page title */}
-      <div className="header">
+      <div className={styles.header}>
         <h1>Select The QR code</h1>
       </div>
 
       {/* Container for QR code type buttons */}
-      <div className="container">
+      <div className={styles.container}>
         {/* Button to navigate to QR Link page */}
-        <button className="button1" onClick={() => navigateToQRType("Link")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("qr_Link")}>
           Link
         </button>
 
         {/* Button to navigate to QR Text page */}
-        <button className="button1" onClick={() => navigateToQRType("Text")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("qr_Text")}>
           Text
         </button>
 
         {/* Button to navigate to QR Personal page */}
-        <button className="button1" onClick={() => navigateToQRType("Personal")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("qr_Personal")}>
           Personal
         </button>
 
         {/* Button to navigate to QR List page */}
-        <button className="button1" onClick={() => navigateToQRType("List")}>
+        <button className={styles.button1} onClick={() => navigateToQRType("user-page")}>
           List
+        </button>
+
+        {/* Button to log out */}
+        <button className={styles.button1} onClick={() => logout()}>
+          Logout
         </button>
         
       </div>
 
       {/* Display the selected QR code type */}
       {selectedType && (
-        <div className="container">
+        <div className={styles.container}>
           <h2>You've selected {selectedType} QR code</h2>
           {/* Additional content or QR code scanning component can be added here */}
         </div>

@@ -25,8 +25,11 @@ const LoginPage = () => {
   }
 
   if (status === "authenticated"){
+
     router.push("/qr_scanner");
   }
+
+
   const login = async (e) => {
     e.preventDefault();
     try {

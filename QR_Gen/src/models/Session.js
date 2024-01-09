@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const sessionSchema = new mongoose.Schema({
+    _id: String,
     sessionToken: String,
     userId: String,
     expires: Date,
-    jwtToken: String, // Add this field to store the JWT token
+    jwtToken: String || null,
 });
 
 const Session = mongoose.model('Session', sessionSchema, 'Session');

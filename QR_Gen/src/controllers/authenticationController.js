@@ -4,8 +4,10 @@ const Account = require('../models/account');
 const Session = require('../models/Session');
 const { application } = require('express');
 const {Types} = require('mongoose');
+const cookie = require('js-cookie');
 
 require('dotenv').config();
+
 // Define authentication controller methods
 const login = (req, res) => {
     res.render('login');
@@ -15,6 +17,7 @@ const authenticateUser = async (req, res, next) => {
     try {
         // Get the token from the cookie    
         const token = req.cookies.token;
+        console.log("token"+token);
         if (!token) {
             return res.status(401).send('Access Denied');
         }
@@ -40,7 +43,6 @@ const authenticateUser = async (req, res, next) => {
 };
 
 
-
 const performLogin = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -61,14 +63,23 @@ const performLogin = async (req, res) => {
 
             // Create a token
             const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET, { expiresIn: '1h' });
+            // send token to cookie of client
+            cookie.set('token', token, { httpOnly: true, credentials: true, sameSite: 'none' });
+            
+     
+          
+           
             
             // Save the token to the session
             const session = new Session({
+                _id: new Types.ObjectId(),
                 sessionToken: 'some-session-token', // generate or extract from Google API
                 userId: user._id,
                 expires: new Date(Date.now() + 3600000), // 1 hour expiration
                 jwtToken: token, // Store the JWT token
             });
+            
+
             //delete old session
             await Session.deleteMany({});
             await session.save();
@@ -77,8 +88,12 @@ const performLogin = async (req, res) => {
             //Redirect to /qr_generate
             // res.redirect(`/qr/qr_generate/${session._id}`);
             //send sessionID to client
-            res.send(session._id);
-            console.log(session._id);
+            //get token from cookie
+            const tokeng = req.cookies.token;
+            console.log("tokeng"+tokeng);
+            res.send(token);
+            
+
         } else {
             return res.send('Wrong password');
         }
@@ -88,9 +103,11 @@ const performLogin = async (req, res) => {
     }
 };
 
-const logout = (req, res) => {
-    res.clearCookie('token');
+const logout = async(req, res) => {
+    // Delete the token from the session
+    await Session.deleteMany({});
     res.redirect('/');
+    
 };
 
 module.exports = {
@@ -98,5 +115,6 @@ module.exports = {
     performLogin,
     logout,
     authenticateUser,
+    
     
 };
