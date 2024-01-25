@@ -21,7 +21,7 @@ const Selection = () => {
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" />
     <div className={home.buttonContainer}>
       <button className={home.button} onClick={() => navigateToQRType("qr_Link")}><img src='Link.svg'></img><span>Link/URL</span></button>
-      <button className={home.button}><img src='PDF.svg'></img><span>PDF</span></button>
+      <button className={home.button}><img src='PDF.svg'></img><span>Custom</span></button>
       <button className={home.button} onClick={() => navigateToQRType("qr_text")}><img src='Text.svg'></img><span>Text</span></button>
       
       
@@ -29,8 +29,8 @@ const Selection = () => {
     <div className={home.buttonContainer}>
       
       <button className={home.button}><img src='Wifi.svg'></img><span>Wifi</span></button>
-      <button className={home.button} onClick={() => navigateToQRType("qr_personal")}><img src='Image.svg'></img><span>vCard</span></button>
-      <button className={home.button}><img src='Music.svg'></img><span>Music</span></button>
+      <button className={home.button} onClick={() => navigateToQRType("qr_personal")}><img src='Image.svg'></img><span>Email</span></button>
+      <button className={home.button} onClick={() => navigateToQRType("qr_personal")}><img src='Music.svg'></img><span>Vcard</span></button>
     </div>
 
     

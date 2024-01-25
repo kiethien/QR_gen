@@ -89,8 +89,7 @@ const performLogin = async (req, res) => {
             // res.redirect(`/qr/qr_generate/${session._id}`);
             //send sessionID to client
             //get token from cookie
-            const tokeng = req.cookies.token;
-            console.log("tokeng"+tokeng);
+            console.log("token"+token);
             res.send(token);
             
 
@@ -106,6 +105,8 @@ const performLogin = async (req, res) => {
 const logout = async(req, res) => {
     // Delete the token from the session
     await Session.deleteMany({});
+    // Delete the token from the cookie
+    res.clearCookie('token');
     res.redirect('/');
     
 };

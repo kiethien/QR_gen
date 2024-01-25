@@ -7,18 +7,41 @@ import Link from "next/link";
 import { faGooglePlusG, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 
 
 const LoginPage = () => {
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
-  const { data, status} = useSession();
-
+  const { data, status } = useSession();
   const router = useRouter();
+//   var status;
+//   function getCookie(cookieName) {
+//     var name = cookieName + "=";
+//     var decodedCookie = decodeURIComponent(document.cookie);
+//     var cookieArray = decodedCookie.split(';');
+
+//     for (var i = 0; i < cookieArray.length; i++) {
+//         var cookie = cookieArray[i].trim();
+//         if (cookie.indexOf(name) == 0) {
+//             return cookie.substring(name.length, cookie.length);
+//         }
+//     }
+    
+
+//     return null;
+// }
+  // function checkStatus() {
+  //   const token = getCookie('token');
+  //   if (token) {
+  //     status = "authenticated";
+  //     console.log('status2',status);
+  //     console.log('token',token);
+  //   } else {
+  //     status = "unauthenticated";
+  // }}
 
   if (status === "loading"){
     return <div className=''>Loading...</div>;
@@ -28,8 +51,6 @@ const LoginPage = () => {
 
     router.push("/qr_scanner");
   }
-
-
   const login = async (e) => {
     e.preventDefault();
     try {
@@ -48,8 +69,21 @@ const LoginPage = () => {
         if (res.data.error) {
           setError(res.data.error);
         } else {
+          //set token in cookie
+          const  token  = res.data;
+          
+          document.cookie = `token=${token}`;
+          // const token_get=getCookie('token');
+          // console.log('token_get',token_get);
+          // checkStatus();
           // Redirect to qr_generate page upon successful login
-          router.push('/qr_scanner');
+          signIn("Credentials", {callbackUrl: '/qr_scanner'});
+          // router.push('/qr_scanner');
+          console.log('status',status);
+          //get token from cookie
+          
+          
+          // console.log('tokenget',tokenget);
         }
       
       }
@@ -109,5 +143,6 @@ const LoginPage = () => {
 
   )
 }
+
 
 export default LoginPage

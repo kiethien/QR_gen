@@ -11,18 +11,18 @@ const showLinkQRGeneration = (req, res) => {
 const generateLinkQR = async (req, res) => {
     try {
         // Access the token from the session or Session schema
-        const session = await Session.findOne({ sessionToken: 'some-session-token' });
-        const jwtToken = session.jwtToken;
-        console.log(jwtToken);
-        if (!jwtToken) {
-            return res.status(401).send('Access Denied');
+        // Access the token from the session or Session schema
+        var currentAccount;
+        const token = await Session.findOne({ sessionToken: 'some-session-token' });
+        
+        if (!token) {
+            currentAccount = "none";
         }
-        try{                                                        //author : Koha
-            // Verify the token
-            const verified = await jwt.verify(jwtToken, process.env.TOKEN_SECRET);
-            decoded = jwt.decode(jwtToken, { complete: true });
-            const currentAccount = decoded.payload.id;
-            if (currentAccount) {
+        else {
+        currentAccount = token.userId;
+        
+        }
+        
         const { link } = req.body;
         
         // Save the form data to the MongoDB database
@@ -43,15 +43,6 @@ const generateLinkQR = async (req, res) => {
 
         // Send the QR code image URL to the client
         res.json({ qrImageUrl: qrCodeDataUrl });
-    }
-    else {
-        res.status(401).send('Unauthorized');
-    }
-}
-catch(err){
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-}
         
     } catch (err) {
         console.error(err);

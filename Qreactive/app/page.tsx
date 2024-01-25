@@ -8,7 +8,7 @@ import Faq from "@/components/Faq";
 export default function Home() {
   return (
     <>
-        <AuthProvider>
+      <AuthProvider>
         <Hero />
         <Selection />
         <Faq />

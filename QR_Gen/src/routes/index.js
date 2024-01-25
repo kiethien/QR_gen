@@ -33,6 +33,8 @@ const linkRoutes = require('./link');
 const qrListRoutes = require('./qrList');
 const textRoutes = require('./text');
 const profileRoutes = require('./profile');
+const emailRoutes = require('./email');
+const wifiRoutes = require('./wifi');
 const personalDataRoutes = require('./personalDataQR');
 const mongoose = require('../db');
 // Use routes
@@ -44,6 +46,8 @@ app.use('/personalQR', personalQRRoutes);
 app.use('/link', linkRoutes);
 app.use('/qrList', qrListRoutes);
 app.use('/text', textRoutes);
+app.use('/email', emailRoutes);
+app.use('/wifi', wifiRoutes);
 app.use('/profile', profileRoutes);
 app.use('/personalDataQR', personalDataRoutes);
 
