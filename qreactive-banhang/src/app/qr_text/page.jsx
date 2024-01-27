@@ -33,8 +33,8 @@ const QRLinkGenerator = () => {
         try {
             const email= getEmailUser();
             // Send the link to the backend for QR code generation
-            const response = await axios.post("http://localhost:5000/link/generate", {
-                Text: qrText,
+            const response = await axios.post("http://localhost:5000/text/generate", {
+                qrText,
                 email,
             });
 
@@ -123,7 +123,7 @@ const QRLinkGenerator = () => {
                     </button>
                     <br/>
                     <div className="mb-60">Text: {qrText}</div>
-                    {qrImageUrl && <Image src={qrImageUrl} alt="Generated QR Code"/>}
+                    {qrImageUrl && <img src={qrImageUrl} alt="Generated QR Code"/>}
                 </div>
 
             </div>

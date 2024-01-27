@@ -122,8 +122,6 @@ function MyQRCodesContent() {
   const handleEditText = async (id) => {
     try {
       console.log(id);
-      const [type, setType] = useState('');
-
       //navigate to the edit page
       router.push(`/qr_text/${id}`); 
     }

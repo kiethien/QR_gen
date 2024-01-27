@@ -22,8 +22,9 @@ const generateTextQR = async (req, res) => {
         console.log("currentAccount"+currentAccount);
         }
             
-        const { text } = req.body;
-
+        const  text  = req.body.qrText;
+        console.log(req.body);
+        console.log(text);
         
         // Save the form data to the MongoDB database
         const textQRData = new TextQR({

@@ -25,7 +25,7 @@ const generateLinkQR = async (req, res) => {
         
         }
         
-        const { link } = req.body;
+        const { link } = req.body.qrLink;
         
         // Save the form data to the MongoDB database
         const linkQRData = new LinkQR({

@@ -1,8 +1,8 @@
 "use client";
+// Import necessary dependencies
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useSession } from "next-auth/react";
 
 
 export default function Text({params}) {
@@ -10,7 +10,6 @@ export default function Text({params}) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const router = useRouter();
-    const { data, status} = useSession();
 
     useEffect(() => {
         const fetchData = async () => {

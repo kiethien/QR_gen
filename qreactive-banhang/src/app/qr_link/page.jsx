@@ -5,6 +5,7 @@ import { useState } from "react";
 import axios from "axios";
 import styles from "./styles.module.css";
 import { useRouter } from "next/navigation";
+import { getEmailUser } from '@/components/emailuser';
 
 const QRLinkGenerator = () => {
     const [qrLink, setQrLink] = useState("");
@@ -30,9 +31,11 @@ const QRLinkGenerator = () => {
 
     const generateQr = async () => {
         try {
+            const email= getEmailUser();
             // Send the link to the backend for QR code generation
             const response = await axios.post("http://localhost:5000/link/generate", {
-                link: qrLink,
+                qrLink,
+                email
             });
 
             // Assuming the backend responds with the generated QR code URL
@@ -121,7 +124,7 @@ const QRLinkGenerator = () => {
                     </button>
                     <br/>
                     <div className="mb-60">Link: {qrLink}</div>
-                    {qrImageUrl && <Image src={qrImageUrl} alt="Generated QR Code"/>}
+                    {qrImageUrl && <img src={qrImageUrl} alt="Generated QR Code"/>}
                 </div>
 
             </div>
