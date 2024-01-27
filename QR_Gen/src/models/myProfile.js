@@ -9,3 +9,6 @@ const myProfileSchema = new mongoose.Schema({
     phone: String,
     dob: String,
 });
+
+const MyProfile = mongoose.model('MyProfile', myProfileSchema);
+module.exports = MyProfile;

@@ -12,7 +12,7 @@ const showRegistration = (req, res) => {
 
 const checkEmail = async (req, res) => {
     try {
-        const { email } = req.body;
+        const  email  = req.body;
         //check already in the database
         const mailAccount = await Account.findOne({ email: email });
         const mailUser = await User.findOne({ email: email });
@@ -77,18 +77,7 @@ const performRegistration = async (req, res) => {
 
 // Profile page for general information
 const SaveProfile = async (req, res) => {
-    const token = req.session.token;
-    const jwtToken =session.token;
-    const session = await Session.findOne({ sessionToken: 'some-session-token' });  
-    if (!jwtToken) {
-        return res.status(401).send('Access Denied');
-    }
-    try{                                                        //author : Koha
-        // Verify the token
-        const verified = await jwt.verify(jwtToken, process.env.TOKEN_SECRET);
-        decoded = jwt.decode(jwtToken, { complete: true });
-        const currentAccount = decoded.payload.id;
-        if (currentAccount) {
+    
     try {
         const { firstname, lastname, address, phone } = req.body;
         const account = await Account.findById(currentAccount);
@@ -105,17 +94,49 @@ const SaveProfile = async (req, res) => {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
-}
-else {
-    res.status(401).send('Unauthorized');
-}
-}
-catch(err){
-    console.error(err);
-    res.status(500).send('Internal Server Error');
-}
-}
+};
 
+
+
+const showProfile = async (req, res) => {
+    const token = req.session.token;
+    const jwtToken = session.token; // Assuming session is defined somewhere
+    const session = await Session.findOne({ sessionToken: 'some-session-token' });
+
+    if (!jwtToken) {
+        return res.status(401).send('Access Denied');
+    }
+
+    try {
+        // Verify the token
+        const verified = await jwt.verify(jwtToken, process.env.TOKEN_SECRET);
+        decoded = jwt.decode(jwtToken, { complete: true });
+        const currentAccount = decoded.payload.id;
+
+        if (currentAccount) {
+            try {
+                const account = await Account.findById(currentAccount);
+                const profile = await myProfile.findOne({ account: currentAccount });
+
+                if (profile) {
+                    // Render the profile page with the profile data
+                    res.render('profile', { profile });
+                } else {
+                    // Handle the case where no profile is found for the current user
+                    res.status(404).send('Profile not found');
+                }
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error');
+            }
+        } else {
+            res.status(401).send('Unauthorized');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+};
 
 
 
@@ -124,4 +145,5 @@ module.exports = {
     performRegistration,
     SaveProfile,
     checkEmail,
+    showProfile,
 };
