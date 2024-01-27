@@ -2,6 +2,7 @@ const qr = require('qrcode');
 const mongoose = require('mongoose');
 const TextQR = require('../models/textQR');
 const Session = require('../models/Session');
+const users = require('../models/users');
 const jwt = require('jsonwebtoken');
 const {authenticateUser} = require('../controllers/authenticationController');
 // Define Text QR controller methods
@@ -10,16 +11,15 @@ const showTextQRGeneration = (req, res) => {
 };
 const generateTextQR = async (req, res) => {
     try {
-        // Access the token from the session or Session schema
         var currentAccount;
-        const token = await Session.findOne({ sessionToken: 'some-session-token' });
-        
-        if (!token) {
+        // Get the token from the cookie
+        const user = await users.findOne({ email: req.body.email });
+        if (!user) {
             currentAccount = "none";
         }
         else {
-        currentAccount = token.userId;
-        
+        currentAccount = user.email;
+        console.log("currentAccount"+currentAccount);
         }
             
         const { text } = req.body;

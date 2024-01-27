@@ -6,15 +6,19 @@ const personalDataQR = require('../models/personalDataQR');
 const users = require('../models/users');
 const jwt = require('jsonwebtoken');
 
+const showList = (req, res) => {
+    res.render('qrList');
+};
 const listQRCodes = async (req, res) => {
     try {
-        const user = await users.findOne({ email: req.params.id });
+        console.log(req.body.email);
+        const user = await users.findOne({ email: req.body.email });
         
         console.log(user);
         const currentAccount = user.email;
-        
+        console.log(currentAccount);
         if (!currentAccount) {
-            return res.status(401).send('Unauthorized');
+            return res.status(401).send('Unauthor');
         }
         
         
@@ -41,5 +45,6 @@ const listQRCodes = async (req, res) => {
 };
 
 module.exports = {
+    showList,
     listQRCodes,
 };

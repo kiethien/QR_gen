@@ -2,6 +2,7 @@ const qr = require('qrcode');
 const mongoose = require('mongoose');
 const WifiQR = require('../models/wifiQR');  // Adjust the model name if needed
 const Session = require('../models/Session');
+const users = require('../models/users');
 const jwt = require('jsonwebtoken');
 const { authenticateUser } = require('../controllers/authenticationController');
 
@@ -14,14 +15,14 @@ const generateWifiQR = async (req, res) => {
     try {
         // Access the token from the session or Session schema
         var currentAccount;
-        const token = await Session.findOne({ sessionToken: 'some-session-token' });
-        
-        if (!token) {
+        // Get the token from the cookie
+        const user = await users.findOne({ email: req.body.email });
+        if (!user) {
             currentAccount = "none";
         }
         else {
-        currentAccount = token.userId;
-        
+        currentAccount = user.email;
+        console.log("currentAccount"+currentAccount);
         }
 
         

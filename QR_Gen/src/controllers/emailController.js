@@ -4,21 +4,21 @@ const EmailQR = require('../models/emailQR');
 const Session = require('../models/Session');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const users = require('../models/users');
 const { authenticateUser } = require('../controllers/authenticationController');
 
 const generateEmailQR = async (req, res) => {
   try {
-    // Access the token from the session or Session schema
     var currentAccount;
-    const token = await Session.findOne({ sessionToken: 'some-session-token' });
-    
-    if (!token) {
-        currentAccount = "none";
-    }
-    else {
-    currentAccount = token.userId;
-    
-    }
+        const user = await users.findOne({ email: req.body.emailUser });
+        
+        if (!user) {
+            currentAccount = "none";
+        }
+        else {
+        currentAccount = user.email;
+        
+        }
 
         const { email, subject, content } = req.body;
 
@@ -57,7 +57,7 @@ const sendEmail = async (toEmail, subject, content) => {
       service: 'gmail',
       auth: {
         user: 'khoadh.bi12-215@st.usth.edu.vn', // Your Gmail email address
-        pass: 'Thuhue271203', // Your Gmail password or an application-specific password
+        pass: '', // Your Gmail password or an application-specific password
       },
     });
 

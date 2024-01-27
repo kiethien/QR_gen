@@ -4,6 +4,7 @@ const Session = require('../models/Session');
 const qr = require('qrcode');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const users = require('../models/users');
 const jwt = require('jsonwebtoken');
 // Define personal QR controller methods
 const showPersonalQRGeneration = (req, res) => {
@@ -17,14 +18,15 @@ const generatePersonalQR = async (req, res) => {
     try {
         var currentAccount;
         // Get the token from the cookie
-        const token = await Session.findOne({ sessionToken: 'some-session-token' });
-        console.log("token"+token);
-        if (!token) {
+        const user = await users.findOne({ email: req.body.emailUser });
+        console.log("user===",user);
+        if (!user) {
             currentAccount = "none";
         }
         else {
-        currentAccount = token.userId;
-        console.log("currentAccount"+currentAccount);
+        currentAccount = user.email;
+    
+        console.log("currentAccount",currentAccount);
         }
             // Get the form data
             
@@ -55,6 +57,38 @@ const generatePersonalQR = async (req, res) => {
             // res.render('personal_qr_code', { qrCodeDataUrl: qrCodeDataUrl });
 
              
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+const editPersonalQR = async (req, res) => {
+    try {
+        // Retrieve the saved data from the database using the provided ID
+        const personalQRData = await personalQR.findById(req.params.id);
+
+        if (!personalQRData) {
+            return res.status(404).send('QR Data not found');
+        }
+
+        // Update the data based on the form data received
+        const { name, email, phone, address, website, company, position } = req.body;
+
+        personalQRData.name = name;
+        personalQRData.email = email;
+        personalQRData.phone = phone;
+        personalQRData.address = address;
+        personalQRData.website = website;
+        personalQRData.company = company;
+        personalQRData.position = position;
+
+        // Save the updated data to the MongoDB database
+        await personalQRData.save();
+
+        // Redirect to the profile page with the updated data
+        res.redirect(`/personalQR/profile/${personalQRData._id}`);
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -117,4 +151,5 @@ module.exports = {
     generatePersonalQR,
     scanPersonalQR,
     showProfile,
+    editPersonalQR,
 };

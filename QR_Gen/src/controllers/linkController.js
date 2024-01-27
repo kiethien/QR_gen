@@ -2,8 +2,10 @@ const qr = require('qrcode');
 const mongoose = require('mongoose');
 const LinkQR = require('../models/linkQR');
 const Session = require('../models/Session');
+const users = require('../models/users');
 const jwt = require('jsonwebtoken');
 const {authenticateUser} = require('../controllers/authenticationController');
+
 // Define Link QR controller methodss
 const showLinkQRGeneration = (req, res) => {
     res.render('qr_link');
@@ -13,13 +15,13 @@ const generateLinkQR = async (req, res) => {
         // Access the token from the session or Session schema
         // Access the token from the session or Session schema
         var currentAccount;
-        const token = await Session.findOne({ sessionToken: 'some-session-token' });
+        const user = await users.findOne({ email: req.body.email });
         
-        if (!token) {
+        if (!user) {
             currentAccount = "none";
         }
         else {
-        currentAccount = token.userId;
+        currentAccount = user.email;
         
         }
         

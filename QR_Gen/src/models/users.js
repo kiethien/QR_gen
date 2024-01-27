@@ -28,7 +28,7 @@ const usersSchema = new mongoose.Schema({
     password: { type: String, default: null },
 });
 
-const Users = mongoose.model('users', usersSchema);
+const Users = mongoose.model('users', usersSchema, 'users');
 
 module.exports = Users;
 

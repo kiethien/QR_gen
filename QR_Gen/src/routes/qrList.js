@@ -7,6 +7,6 @@ const {authenticateUser} = require('../controllers/authenticationController');
 
 
 // Define routes
-router.get('/list/:id', authenticateUser, qrListController.listQRCodes);
-
+router.post('/list', qrListController.listQRCodes);
+router.get('/list', qrListController.showList);
 module.exports = router;

@@ -4,6 +4,7 @@ const Session = require('../models/Session');
 const qr = require('qrcode');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const users = require('../models/users');
 const jwt = require('jsonwebtoken');
 
 const scanPersonalDataQR = async (req, res) => {
@@ -24,13 +25,13 @@ const GeneratePersonalDataQR = async (req, res) => {
     try {
         var currentAccount;
         // Get the token from the cookie
-        const token = await Session.findOne({ sessionToken: 'some-session-token' });
+        const user = await users.findOne({ email: req.body.email });
         console.log("token"+token);
-        if (!token) {
+        if (!UserActivation) {
             currentAccount = "none";
         }
         else {
-        currentAccount = token.userId;
+        currentAccount = user.email;
         console.log("currentAccount"+currentAccount);
         }
             // Get the form data
