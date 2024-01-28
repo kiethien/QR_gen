@@ -30,7 +30,7 @@ export default function RootLayout({
           <Providers>
             <Navbar />
             <div className="h-full w-screen mt-7">
-              <div>
+              <div className="w-screen justify-center">
                 {children}
               </div>
             </div>
