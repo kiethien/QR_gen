@@ -23,15 +23,17 @@ export default function RootLayout({
     <html lang='en' className='h-full'>
       <body
         className={cn(
-          'relative h-full font-sans antialiased',
+          'relative',
           inter.className
         )}>
-        <main className='relative overflow-hidden'>
+        <main className='relative overflow-hidden '>
           <Providers>
             <Navbar />
-              
+            <div className="h-full w-screen mt-7">
+              <div>
                 {children}
-              
+              </div>
+            </div>
             <Footer />
 
           </Providers>

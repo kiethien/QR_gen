@@ -205,10 +205,6 @@ Information
               <button className={styles.button1}>Generate QR</button>
             </div>
           </form>
-
-        </div>
-        <div>
-          <h1></h1>
           {qrImageUrl && <img src={qrImageUrl} alt="Generated QR Code"/>}
         </div>
       </>

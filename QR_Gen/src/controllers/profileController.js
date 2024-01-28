@@ -2,6 +2,7 @@ const myProfile = require('../models/myProfile');
 const linkQR = require('../models/linkQR');
 const textQR = require('../models/textQR');
 const users = require('../models/users');
+const personalQR = require('../models/personalQR');
 const editProfile = async (req, res) => {
     try {
         // Access the token from the session or Session schema
@@ -84,7 +85,7 @@ const showProfile = async (req, res) => {
                 account: user.email,
                 name: req.body.name,
                 email: req.body.email,
-                phone: req.body.phone,
+                phone: req.body.phoneNumber,
                 address: req.body.address,
                 website: req.body.website,
                 company: req.body.company,
