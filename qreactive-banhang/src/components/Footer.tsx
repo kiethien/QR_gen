@@ -1,85 +1,58 @@
-import { FOOTER_CONTACT_INFO, FOOTER_LINKS, SOCIALS } from '@/config'
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
-import MaxWidthWrapper from './MaxWidthWrapper'
+import styles from "./footer.module.css";
 
 const Footer = () => {
   return (
-    <MaxWidthWrapper>
-    <footer className="flexCenter bg-fixed mb-24 bg-blue-700 bg-cover">
-      <div className="padding-container max-container flex w-full flex-col gap-14">
-        <div className="flex flex-col items-start justify-center gap-[10%] md:flex-row">
-          <Link href="/" className="mb-10">
-            <Image src="hilink-logo.svg" alt="logo" width={74} height={29}/>
-          </Link>
-
-          <div className='flex flex-wrap gap-10 sm:justify-between md:flex-1'>
-            {FOOTER_LINKS.map((columns) => (
-              <FooterColumn title={columns.title}>
-                <ul className="text-base flex flex-col gap-4 text-gray-30">
-                  {columns.links.map((link) => (
-                    <Link href="/" key={link}>
-                      {link}
-                    </Link>
-                  ))}
-                </ul>
-              </FooterColumn>
-            ))}
-
-            <div className="flex flex-col gap-5">
-              <FooterColumn title={FOOTER_CONTACT_INFO.title}>
-                {FOOTER_CONTACT_INFO.links.map((link) => (
-                  <Link
-                    href="/"
-                    key={link.label}
-                    className="flex gap-4 md:flex-col lg:flex-row"
-                  >
-                    <p className="whitespace-nowrap">
-                      {link.label}:
-                    </p>
-                    <p className="medium-14 whitespace-nowrap text-blue-70">
-                      {link.value}
-                    </p>
-                  </Link>
-                ))}
-              </FooterColumn>
-            </div>
-
-            <div className="flex flex-col gap-5">
-              <FooterColumn title={SOCIALS.title}>
-                <ul className="regular-14 flex gap-4 text-gray-30">
-                  {SOCIALS.links.map((link) => (
-                    <Link href="/" key={link}>
-                      <Image src={link} alt="logo" width={24} height={24} />
-                    </Link>
-                  ))}
-                </ul>
-              </FooterColumn>
-            </div>
+    <div className={styles.footer}>
+      <div className={styles.innerfooter}>
+        <div className={styles.links}>
+          <div className={styles.column1}>
+            <div className={styles.learnMore}>Learn More</div>
+            <button className={styles.aboutQreactive}>About Qreactive</button>
+            <button
+              className={styles.aboutQreactive}
+            >{`Private & Policy`}</button>
+            <button className={styles.contactUs}>Contact Us</button>
+          </div>
+          <div className={styles.column1}>
+            <div className={styles.learnMore}>Support</div>
+            <button className={styles.aboutQreactive}>FAQs</button>
+            <button className={styles.aboutQreactive}>Help Center</button>
+          </div>
+          <div className={styles.column3}>
+            <b className={styles.qreactiveCompanyPrivacy}>Contact Us</b>
+            <button className={styles.aboutQreactive}>Admin Officer:</button>
+            <button className={styles.aboutQreactive}>Email Officer:</button>
           </div>
         </div>
-
-        <div className="border bg-gray-20" />
-        <p className="regular-14 w-full text-center text-gray-30">2023 Qreactive | All rights reserved</p>
+        <div className={styles.innerfooter2}>
+          <div className={styles.fashion}>
+            <div className={styles.learnMore}>QReactive</div>
+            <div className={styles.byMyteam}>by MyTeam</div>
+          </div>
+          <div className={styles.logos}>
+            <button className={styles.facebook}>
+              <img className={styles.facebookIcon} alt="" src="/facebook.svg" />
+            </button>
+            <button className={styles.facebook}>
+              <img className={styles.twitterIcon} alt="" src="/twitter.svg" />
+            </button>
+            <button className={styles.instagram}>
+              <img
+                className={styles.instagramIcon}
+                alt=""
+                src="/instagram@2x.png"
+              />
+            </button>
+          </div>
+        </div>
       </div>
-    </footer>
-    </MaxWidthWrapper>
-  )
-}
-
-type FooterColumnProps = {
-  title: string;
-  children: React.ReactNode;
-}
-
-const FooterColumn = ({ title, children }: FooterColumnProps) => {
-  return (
-    <div className="flex flex-col gap-5">
-      <h4 className="bold-18 whitespace-nowrap">{title}</h4>
-      {children}
+      <div className={styles.source}>
+        <div className={styles.qreactiveCompanyPrivacy}>
+          © 2023 QReactive | All right reserved
+        </div>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default Footer
+export default Footer;

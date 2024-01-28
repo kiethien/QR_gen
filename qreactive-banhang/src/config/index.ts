@@ -45,10 +45,10 @@ export const PRODUCT_CATEGORIES = [
 // NAVIGATION
 export const NAV_LINKS = [
   { href: '/', key: 'home', label: 'Home' },
-  { href: '/user-page', key: 'why_qreactive', label: 'Why Qreactive?' },
-  { href: '/qr_scanner', key: 'qr_scanner', label: 'Qr Scanner' },
+  { href: '/whyqr', key: 'why_qreactive', label: 'Why Qreactive?' },
+  { href: '/qr_scanner', key: 'qr_scanner', label: 'Create Qr Code' },
   { href: '/faq', key: 'faq ', label: 'FAQ ' },
-  { href: '/qr_list', key: 'contact_us', label: 'Contact Us' },
+  { href: '/', key: 'contact_us', label: 'Contact Us' },
 ];
 
 // CAMP SECTION

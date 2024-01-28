@@ -1,9 +1,9 @@
 import Head from "next/head";
-import Header from "../components/header";
-import Herosection1 from "../components/herosection1";
-import PosQR from "../components/pos-q-r";
-import HeroSection2 from "../components/hero-section2";
-import Community from "../components/community";
+import Header from "./header";
+import Herosection1 from "./herosection1";
+import PosQR from "./pos-q-r";
+import HeroSection2 from "./hero-section2";
+import Community from "./community";
 import styles from "./index.module.css";
 
 const WhyQRPage = () => {
